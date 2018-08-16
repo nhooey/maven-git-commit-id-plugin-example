@@ -6,10 +6,15 @@
 
     <groupId>pl.project13.maven</groupId>
     <artifactId>my-git-plugin-sample-app</artifactId>
-    <packaging>war</packaging>
-    <version>0.1</version>
+    <packaging>jar</packaging>
+    <version>${git.commit.id.describe}</version>
     <name>my-git-plugin-sample-app</name>
     <url>http://www.project13.pl</url>
+
+    <properties>
+      <maven.compiler.source>1.6</maven.compiler.source>
+      <maven.compiler.target>1.6</maven.compiler.target>
+    </properties>
 
     <dependencies />
 
@@ -40,22 +45,68 @@
                   <goal>revision</goal>
                 </goals>
               </execution>
+
+              <execution>
+                <phase>validate</phase>
+                <goals>
+                  <goal>revision</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <echo>[git.commit.id] ${git.commit.id}</echo>
+                  </tasks>
+                </configuration>
+              </execution>
+
             </executions>
+
             <configuration>
               <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
               <prefix>git</prefix>
               <verbose>true</verbose>
+              <skipPoms>false</skipPoms>
+              <injectAllReactorProjects>true</injectAllReactorProjects>
               <generateGitPropertiesFile>true</generateGitPropertiesFile>
               <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
-              <format>json</format>
+              <format>properties</format>
               <gitDescribe>
                 <skip>false</skip>
                 <always>false</always>
                 <dirty>-dirty</dirty>
               </gitDescribe>
+
+              <validationProperties>
+                  <!-- verify that the current repository is not dirty -->
+                  <validationProperty>
+                      <name>validating git dirty</name>
+                      <value>${git.dirty}</value>
+                      <shouldMatchTo>false</shouldMatchTo>
+                  </validationProperty>
+              </validationProperties>
+
             </configuration>
           </plugin>
 
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+              <execution>
+                <phase>validate</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <echo>git.commit.id.describe = ${git.commit.id.describe}</echo>
+                  </tasks>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
         </plugins>
+
     </build>
 </project>
