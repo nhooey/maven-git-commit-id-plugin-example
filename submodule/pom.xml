@@ -5,20 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pl.project13.maven</groupId>
-    <artifactId>maven-git-commit-id-plugin-example</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>maven-git-commit-id-plugin-example-submodule</artifactId>
+    <packaging>jar</packaging>
     <version>${git.commit.id.describe}</version>
-    <name>maven-git-commit-id-plugin-example</name>
+    <name>maven-git-commit-id-plugin-example-submodule</name>
     <url>http://www.project13.pl</url>
 
     <properties>
       <maven.compiler.source>1.6</maven.compiler.source>
       <maven.compiler.target>1.6</maven.compiler.target>
     </properties>
-
-    <modules>
-        <module>submodule</module>
-    </modules>
 
     <dependencies />
 
@@ -68,11 +64,9 @@
               <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
               <prefix>git</prefix>
               <verbose>true</verbose>
-              <skipPoms>false</skipPoms>
-              <injectAllReactorProjects>true</injectAllReactorProjects>
               <generateGitPropertiesFile>true</generateGitPropertiesFile>
               <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
-              <format>properties</format>
+              <format>json</format>
               <gitDescribe>
                 <skip>false</skip>
                 <always>false</always>
@@ -103,7 +97,8 @@
                 </goals>
                 <configuration>
                   <tasks>
-                    <echo>git.commit.id.describe = ${git.commit.id.describe}</echo>
+                    <echo>Displaying value of 'testproperty' property</echo>
+                    <echo>[testproperty] ${git.branch}</echo>
                   </tasks>
                 </configuration>
               </execution>
